@@ -2,6 +2,8 @@
 ---
 The first step in creating the ArchLinux vm is to navigate to the ArchLinux wiki page, which can be found by following this [link](https://wiki.archlinux.org/title/Main_page), from there navigate over to the [installation guide](https://wiki.archlinux.org/title/Installation_guide) and install the .iso file via HTTP under one of the mirror sites. I used the 0xem.ca site under the Canada tab.
 
+![A screenshot showcasing the Canada mirror sites available to download from](https://github.com/PcKaPnCh/PcKaPnCh.github.io/blob/main/Screenshot%202024-10-20%20222537.png)
+
 ## Verifying the Image Signature
 ___
 Next, install the latest full version of GnuPG from their [website](https://gnupg.org/download/), then proceed to select the Gpg4win download version, if you use a windows OS but make sure to select the correct version for your working OS. From there, download the PGP signature, which can be found at the bottom of this section. Then open up the windows terminal and using the command ```gpg --keyserver-options auto-key-retrieve --verify .\Downloads\archlinux-2024.10.01-x86_64.iso.sig .\Downloads\archlinux-2024.10.01-x86_64.iso ```  to verify the file's signature and make sure the image signature is correct, which it was for me.
@@ -19,13 +21,17 @@ Verify a connection to the internet by using the ```ping google.com``` command, 
 
 ## Verifying the Boot Mode
 ___
-After using the ```cat /sys/firmware/efi/fw_platform_size``` command in the ArchLinux vm, I was returned not with an expected value of 64 or 32, but rather with a 'no such file or directory'. This means the machine is booted in BIOS, which I would like to change to boot using UEFI. To amend this, I firstly enabled EFI usage in the settings for the vm in VirtualBox. After I checked the EFI box, the command returned 64, which means that the vm now boots in UEFI like I would prefer .
+After using the ```cat /sys/firmware/efi/fw_platform_size``` command in the ArchLinux vm, I was returned not with an expected value of 64 or 32, but rather with a 'no such file or directory'. This means the machine is booted in BIOS, which I would like to change to boot using UEFI. To amend this, I firstly enabled EFI usage in the settings for the vm in VirtualBox. After I checked the EFI box, the command returned 64, which means that the vm now boots in UEFI like I would prefer.
+
+![A screenshot showing the available customizable settings for the vm](https://github.com/PcKaPnCh/PcKaPnCh.github.io/blob/main/Screenshot%202024-10-22%20130027.png)
 
 >[!NOTE]
 >Enabling EFI can be found in the setup before making the VM, if you would like to have the machine boot in BIOS, leave it unchecked.
 ## Partition Disks
 ___
 For this part of the project, I used the command ```fdisk /dev/sda``` command in order to make the two partitions necessary for the virtual machine. Firstly, after using the initial gdisk command I typed 'g' to create a new partition table, then I typed 'n' for a new partition, then 'enter' for the default partition number, then 'enter' again for the first sector, then I used ```+500M``` as the amount of memory recommended for the EFI system partition, and then the code '1' after pressing 't' to denote the partition as an EFI system partition. I then repeated this process for the root partition with the only difference being that I made its memory store the rest of the memory.
+
+![A screenshot of the gpt partition table after making an EFI and root system partition](https://github.com/PcKaPnCh/PcKaPnCh.github.io/blob/main/Screenshot%202024-10-24%20134136.png)
 
 After this, I continued to follow the instructions set before me on the ArchLinux wiki, which stated that formatting was the next item on the checklist. I followed their instructions and used ```mkfs.ext4 /dev/sda2``` for the root partitionw and ```mkfs.fat -F 32 /dev/sda1``` for the EFI partition. From there, I was then instructed to mount each of these partitions to their designated spaces. I followed their instructions and used ```mount /dev/sda2 /mnt``` to mount the root partition to /mnt, ```mount --mkdir /dev/sda1 /mnt/boot``` to mount the EFI partition to /mnt/boot.
 >[!Warning]
@@ -56,7 +62,7 @@ To first create the three new users (justin, codi, and my personal account), I h
 ## Customization
 ___
 	
-For some customization, I used ```vim ~/.zshrc``` as a method of editing the file, from there I edited the theme line and make it completely random every time I logged in. I then changed some settings such as aliases in my personal account like using ```c``` as the alias for ```clear```. I also used the same method for using ```ll``` as the alias for ```ls -l```.  I also added one of my favorite packages as well ```sl```, which spawns a steam locomotive that scrolls across the screen. I also used ```pacman -Sy firefox``` to install the Firefox browser.
+For some customization, I used ```vim ~/.zshrc``` as a method of editing the file, from there I edited the theme line and make it completely random every time I logged in. I then changed some settings such as aliases in my personal account like using ```c``` as the alias for ```clear```. I also used the same method for using ```ll``` as the alias for ```ls -la```.  I also added one of my favorite packages as well ```sl```, which spawns a steam locomotive that scrolls across the screen. I also used ```pacman -Sy firefox``` to install the Firefox browser.
 # Extras
 ___
 >[!Note] 
